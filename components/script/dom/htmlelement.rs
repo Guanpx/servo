@@ -572,7 +572,10 @@ impl HTMLElementMethods for HTMLElement {
     // https://html.spec.whatwg.org/multipage/#dom-contenteditable
     fn ContentEditable(&self) -> DOMString {
         // TODO: https://github.com/servo/servo/issues/12776
-        DOMString::from("inherit")
+        self.upcast::<Element>()
+            .get_attribute(&ns!(), &local_name!("contenteditable"))
+            .map(|attr| DOMString::from(&**attr.value()))
+            .unwrap_or_else(|| DOMString::from("inherit"))
     }
 
     // https://html.spec.whatwg.org/multipage/#dom-contenteditable
